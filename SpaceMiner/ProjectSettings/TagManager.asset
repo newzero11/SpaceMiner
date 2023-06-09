@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - pickaxe
+  - dangerousArea
+  - warningArea
+  - slot
+  - material
+  - Mineral
+  - Minerals
+  - Laser
+  - LaserBeam
+  - Material
+  - HammerPin
+  - Drum
+  - Bullet
+  - Enemy
+  - Rock
+  - Alien
+  - bag
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - protectInventory
+  - Water
+  - UI
+  - hand
+  - material
+  - slot
+  - rangeCheck
+  - bag
+  - mineral
+  - Laser
+  - 
+  - 
+  - Grab
+  - Body
+  - Ground
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
