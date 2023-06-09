@@ -41,8 +41,6 @@ public class checkArea : MonoBehaviour
         }
         else if (other.tag == "dangerousArea") //Check if the player goes out of the danger zone and decrease HP
         {
-            GetComponent<ManagePlayerHealth>().decreasePlayerHealth(50);
-
             Destroy(newPopup);
             chcekDangerous = true;
         }
