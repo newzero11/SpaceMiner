@@ -91,9 +91,12 @@ public class SetAlienDestination : MonoBehaviour
         if (rock_list[currentTargetNum] == null) {
             currentTargetNum= Random.Range(0, rock_list.Count);
         }
+        if (targetNum >= rock_list.Count) {
+            targetNum = rock_list.Count - 1;
+        }
         mineral_distance = Vector3.Distance(rock_list[targetNum].transform.position,
         rock_list[currentTargetNum].transform.position);
-        while (targetNum == currentTargetNum || mineral_distance < 1f) {
+        while (mineral_distance < 1f) {
             targetNum = Random.Range(0, rock_list.Count);
             if (rock_list[targetNum] != null && rock_list[currentTargetNum] != null) {
                 mineral_distance = Vector3.Distance(rock_list[targetNum].transform.position,
