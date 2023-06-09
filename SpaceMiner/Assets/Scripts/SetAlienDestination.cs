@@ -7,8 +7,6 @@ public class SetAlienDestination : MonoBehaviour
 {
     [SerializeField]
     private GameObject rocks;
-    private int num_of_rocks;
-    private List<Transform> rock_list = new List<Transform>();
     private Transform target;
     private NavMeshAgent agent;
     private Animator animator;
@@ -25,39 +23,44 @@ public class SetAlienDestination : MonoBehaviour
     }
     void Start()
     {
-        //player = GameObject.FindWithTag("Player");
-        num_of_rocks = rocks.transform.childCount;
-        for (int i = 0; i < num_of_rocks; i++) {
-            rock_list.Add(rocks.transform.GetChild(i));
-        }
-        targetNum = Random.Range(0, num_of_rocks);
-        //Debug.Log(targetNum);
-        target = rock_list[targetNum];
+        //The destination of the nav mesh agent is one of the rocks
+        //When the alien starts heading for their destination, play a walking animation.
+        targetNum = Random.Range(0, rocks.transform.childCount);
+        target = rocks.transform.GetChild(targetNum);
         agent.SetDestination(target.position);
         animator.SetBool("isWalking", true);
     }
 
     void Update()
     {
-        
+
+        //Set a variable that determines whether the destination has been reached.
         if (agent.isActiveAndEnabled && checkReachedDestination()) {
             isArrival = true;
         }
 
+        //Repeat the following situation while the alien is alive.
         if (GetComponent<ManageAlienHealth>().checkAlienIsDead() != true) {
+            //When aliens arrive at the rock, which is their destination
+            //while not in attack mode, they set a new rock as their destination.
             if (isArrival && !AttackMode) {
                 isArrival = false;
                 agent.ResetPath();
                 agent.isStopped = true;
                 animator.SetBool("isWalking", false);
-                StartCoroutine(steerToOther());
+                if (rocks.transform.childCount != 0) {
+                    StartCoroutine(steerToOther());
+                }                 
             }
-
+            //If an alien detects the player and enters attack mode,
+            //the destination changes to the player's position.
             if (AttackMode) {
                 agent.SetDestination(player.transform.position);
                 agent.stoppingDistance = 3f;
 
-                //check player and alien distance? or on the planet?
+                //Check the distance between an alien and the player,
+                //and change the attack mode to false when the distance increases.
+                //This is to prevent aliens from attacking the player after the player leaves the planet.
                 float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
                 if (distanceToPlayer >= 10) {
                     isArrival = false;
@@ -69,11 +72,13 @@ public class SetAlienDestination : MonoBehaviour
                 }
             }
         }
+        //Aliens no longer move when they die.
         else {
             agent.isStopped = true;
         }       
     }
 
+    //It is a function to check if aliens have arrived at their destination.
     private bool checkReachedDestination() {
         if (!agent.pathPending) {
             if (agent.remainingDistance <= agent.stoppingDistance) {
@@ -85,47 +90,18 @@ public class SetAlienDestination : MonoBehaviour
         return false;
     }
 
-    private void setTarget() {
-        int currentTargetNum = targetNum;
-        float mineral_distance;
-        if (rock_list[currentTargetNum] == null) {
-            currentTargetNum= Random.Range(0, rock_list.Count);
-        }
-        if (targetNum >= rock_list.Count) {
-            targetNum = rock_list.Count - 1;
-        }
-        mineral_distance = Vector3.Distance(rock_list[targetNum].transform.position,
-        rock_list[currentTargetNum].transform.position);
-        while (mineral_distance < 1f) {
-            targetNum = Random.Range(0, rock_list.Count);
-            if (rock_list[targetNum] != null && rock_list[currentTargetNum] != null) {
-                mineral_distance = Vector3.Distance(rock_list[targetNum].transform.position,
-            rock_list[currentTargetNum].transform.position);
-            }
-            else {
-                mineral_distance = 0;
-            }
-            
-        }
-    }
-
+    //It is a function that determines a new destination when an alien arrives at a destination.
     private IEnumerator steerToOther() {
-
-        setTarget();
         yield return new WaitForSeconds(2f);
-        
-        //Debug.Log(targetNum);
-        target = rock_list[targetNum];
-        agent.SetDestination(target.position);
-        agent.isStopped = false;
-        animator.SetBool("isWalking", true);
-    }
 
-    void removeRockFromList(Transform rock) {
-        if (rock_list.Contains(rock)) {
-            Debug.Log(rock + " removed");
-            rock_list.Remove(rock);
-            num_of_rocks = rock_list.Count;
+        if (rocks.transform.childCount != 0) {
+            targetNum = Random.Range(0, rocks.transform.childCount);
+            target = rocks.transform.GetChild(targetNum);
+            agent.SetDestination(target.position);
+            agent.isStopped = false;
+            animator.SetBool("isWalking", true);
         }
+        
     }
+  
 }

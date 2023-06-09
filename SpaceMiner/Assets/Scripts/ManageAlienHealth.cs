@@ -20,6 +20,8 @@ public class ManageAlienHealth : MonoBehaviour
     }
 
     private void Update() {
+        //When an alien is attacked, it activates the hp bar and reduces the alien's health.
+        //The value of the slider is also adjusted to fit the health.
         if (AlienHealth <= 0 && !isAlienDead) {
             isAlienDead = true;
             HealthBar.SetActive(false);
@@ -30,6 +32,8 @@ public class ManageAlienHealth : MonoBehaviour
 
     }
 
+    //Attack from a laser gun, and call this function if an alien is hit,
+    //reducing the alien's health.
     public void takeDamage() {
         if (!isAlienDead) {
             HealthBar.SetActive(true);
@@ -39,10 +43,12 @@ public class ManageAlienHealth : MonoBehaviour
         }
     }
 
+    //This function is used to determine if aliens are dead in SetAlienDestination.
     public bool checkAlienIsDead() {
         return isAlienDead;
     }
 
+    //If the alien are dead, play related animation and destroy the alien.
     IEnumerator destroyAlien() {
         yield return new WaitForSeconds(2);
         Destroy(gameObject);

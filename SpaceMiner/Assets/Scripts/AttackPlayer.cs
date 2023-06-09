@@ -27,7 +27,6 @@ public class AttackPlayer : MonoBehaviour
     private Ray RightRay;
     public bool AttackMode = false;
     private SkinnedMeshRenderer eyeRenderer;
-    private int AlienHealth;
     private bool isLeft = true;
     private bool isShoot = false;
     private GameObject player;
@@ -44,29 +43,36 @@ public class AttackPlayer : MonoBehaviour
     {
         eyeRenderer = Eyes.GetComponent<SkinnedMeshRenderer>();
         OriginalEyeMaterial = eyeRenderer.material;
-        AlienHealth = 100;
         player = GameObject.FindWithTag("Player");
         shootLaserTransform = LaserObject.transform;
     }
 
     void Update()
-    { 
+    {
+        //It is a ray used to detect the player.
         LeftRay = new Ray(LeftEye.transform.position, transform.localRotation * Vector3.forward * 10f);
         RightRay = new Ray(RightEye.transform.position, transform.localRotation * Vector3.forward * 10f);
-        //Debug.DrawRay(LeftEye.transform.position, LeftEye.transform.forward*20f, Color.red);
-        //Debug.DrawRay(RightEye.transform.position, RightEye.transform.forward * 20f, Color.red);
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        
+
+        //Check the distance between the player and the alien,
+        //and set it to attack mode when it comes within a certain distance.
         if (isPlayerDetected() == true && !AttackMode && distanceToPlayer<8) {
             AttackMode = true;
+            //Set Attack Mode of SetAlienDestination to true
+            //to change the destination to the player position.
             GetComponent<SetAlienDestination>().AttackMode = true;
+            //The alien's eyes turn red when in attack mode.
             eyeRenderer.material = RedEyeMaterial;
 
+            //And start the eye laser attack.
             StartCoroutine(LaserAttack());
         }       
 
     }
 
+    //Aliens have a ray in their left eye and right eye,
+    //and if they detect a player in either ray, they change the attack mode to true.
     private bool isPlayerDetected() {
         RaycastHit hit;
         if (Physics.Raycast(LeftRay, out hit)) {
@@ -87,7 +93,8 @@ public class AttackPlayer : MonoBehaviour
     IEnumerator LaserAttack() {
         yield return new WaitForSeconds(1f);
 
-        while (GetComponent<ManageAlienHealth>().checkAlienIsDead() != true) {
+        //The laser is fired alternately in both eyes every second.
+        while (GetComponent<ManageAlienHealth>().checkAlienIsDead() != true && AttackMode) {
             ShootLaser(isLeft);
             isLeft = !isLeft;
             yield return new WaitForSeconds(1f);
@@ -95,6 +102,7 @@ public class AttackPlayer : MonoBehaviour
 
     }
 
+    //Determines the position to be fired based on which eye it is to be fired from.
     private void ShootLaser(bool isLeftTurn) {
 
         if (isLeftTurn) {
@@ -108,6 +116,8 @@ public class AttackPlayer : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        //The laser object is instantiated and fired,
+        //and the object is destroyed after 2 seconds.
         if (isShoot) {
             isShoot = false;
             Vector3 pos = shootLaserTransform.position + transform.forward * LaserObject.transform.lossyScale.y;
@@ -119,6 +129,8 @@ public class AttackPlayer : MonoBehaviour
 
     }
 
+    //When the attack mode changes from true to false,
+    //it changes the eye to its original color.
     public void changeToOriginalEyeMaterial() {
         eyeRenderer.material = OriginalEyeMaterial;
     }

@@ -29,38 +29,36 @@ public class ManagePlayerHealth : MonoBehaviour
         Fill.color = gradient.Evaluate(1f);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(PlayerHealth<=0 && !isDead) {
+        //When the player's health reaches zero, the game ends.
+        if (PlayerHealth<=0 && !isDead) {
             isDead = true;
-            Debug.Log("Player Died");
             StartCoroutine(goToGameOverScene());
         }
     }
 
     private void OnTriggerEnter(Collider other) {
+        //When a player is hit by an alien laser, the health is reduced.
         if (other.gameObject.CompareTag("Laser")) {
             if (!isDead) {
-                /*PlayerHealth -= AlienAttackDamage;
-                slider.value = PlayerHealth;
-                Fill.color = gradient.Evaluate(slider.normalizedValue);*/
                 decreasePlayerHealth(AlienAttackDamage);
-                Debug.Log("Player Health: " + PlayerHealth);
             }
         }
     }
 
+    ////When the player dies, go to game over scene.
     IEnumerator goToGameOverScene() {
         yield return new WaitForSeconds(2f);
-        //go to game over scene
         SceneManager.LoadScene("GameOver");
     }
-
+    //When the player dies, the oxygenerator stops working.
     public bool checkPlayerIsDead() {
         return isDead;
     }
 
+    //Reduce player health and set the value of hp bar accordingly.
+    //Show different colors on the hp bar depending on the amount of health left through gradient.
     public void decreasePlayerHealth(int decrement) {
         PlayerHealth -= decrement;
         slider.value = PlayerHealth;

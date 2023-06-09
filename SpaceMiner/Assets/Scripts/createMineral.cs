@@ -32,8 +32,6 @@ public class createMineral : MonoBehaviour
                     Instantiate(thisType, transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
                 }
                 audioSource.PlayOneShot(audioClip);
-                //psy added
-                notifyRockListChanged(gameObject.transform);
                 Destroy(gameObject);
             }
         }
@@ -62,13 +60,4 @@ public class createMineral : MonoBehaviour
         }
     }
 
-    //psy added function
-    //Aliens set the rocks to destination and go around,
-    //so should let them know when the rocks are removed.
-    private void notifyRockListChanged(Transform removedRock) {
-        GameObject[] aliens = GameObject.FindGameObjectsWithTag("Alien");
-        foreach(GameObject alien in aliens) {
-            alien.SendMessage("removeRockFromList", removedRock, SendMessageOptions.DontRequireReceiver);
-        }
-    }
 }
