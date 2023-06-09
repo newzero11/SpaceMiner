@@ -25,6 +25,7 @@ public class ManageAlienHealth : MonoBehaviour
             HealthBar.SetActive(false);
             Debug.Log("Alien Died");
             animator.SetTrigger("isDead");
+            StartCoroutine(destroyAlien());
         }
 
     }
@@ -42,4 +43,8 @@ public class ManageAlienHealth : MonoBehaviour
         return isAlienDead;
     }
 
+    IEnumerator destroyAlien() {
+        yield return new WaitForSeconds(2);
+        Destroy(gameObject);
+    }
 }

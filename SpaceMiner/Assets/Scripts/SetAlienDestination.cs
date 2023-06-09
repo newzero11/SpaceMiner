@@ -85,16 +85,30 @@ public class SetAlienDestination : MonoBehaviour
         return false;
     }
 
-    private IEnumerator steerToOther() {
+    private void setTarget() {
         int currentTargetNum = targetNum;
-        float mineral_distance = Vector3.Distance(rock_list[targetNum].transform.position, 
-            rock_list[currentTargetNum].transform.position);
+        float mineral_distance;
+        if (rock_list[currentTargetNum] == null) {
+            currentTargetNum= Random.Range(0, rock_list.Count);
+        }
+        mineral_distance = Vector3.Distance(rock_list[targetNum].transform.position,
+        rock_list[currentTargetNum].transform.position);
         while (targetNum == currentTargetNum || mineral_distance < 1f) {
             targetNum = Random.Range(0, rock_list.Count);
-            mineral_distance = Vector3.Distance(rock_list[targetNum].transform.position,
+            if (rock_list[targetNum] != null && rock_list[currentTargetNum] != null) {
+                mineral_distance = Vector3.Distance(rock_list[targetNum].transform.position,
             rock_list[currentTargetNum].transform.position);
+            }
+            else {
+                mineral_distance = 0;
+            }
+            
         }
-        
+    }
+
+    private IEnumerator steerToOther() {
+
+        setTarget();
         yield return new WaitForSeconds(2f);
         
         //Debug.Log(targetNum);
@@ -106,6 +120,7 @@ public class SetAlienDestination : MonoBehaviour
 
     void removeRockFromList(Transform rock) {
         if (rock_list.Contains(rock)) {
+            Debug.Log(rock + " removed");
             rock_list.Remove(rock);
             num_of_rocks = rock_list.Count;
         }

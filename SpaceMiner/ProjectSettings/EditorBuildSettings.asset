@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: e613f984142bf5748a9c1b80b59b0e2b
   - enabled: 1
-    path: Assets/Scenes/Space.unity
-    guid: 15404a89e4a7c534287a055835e0b2d9
+    path: Assets/Scenes/PlayScene.unity
+    guid: 353fbb8e94201c24296af0c1afbb5c8c
   - enabled: 1
     path: Assets/Scenes/GameClear.unity
     guid: f42d6e8052011aa44a1e26e27202675d

@@ -29,7 +29,7 @@ public class createMineral : MonoBehaviour
             if (leftHit <= 0) { //If you hit the rock a certain number of times, it breaks and creates a certain mineral or material 
                 if (thisType != null) {
                     
-                    Instantiate(thisType, transform.position + new Vector3(0, 0.1f, 0), Quaternion.identity);
+                    Instantiate(thisType, transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
                 }
                 audioSource.PlayOneShot(audioClip);
                 //psy added

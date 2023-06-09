@@ -55,7 +55,9 @@ public class AttackPlayer : MonoBehaviour
         RightRay = new Ray(RightEye.transform.position, transform.localRotation * Vector3.forward * 10f);
         //Debug.DrawRay(LeftEye.transform.position, LeftEye.transform.forward*20f, Color.red);
         //Debug.DrawRay(RightEye.transform.position, RightEye.transform.forward * 20f, Color.red);
-        if (isPlayerDetected() == true && !AttackMode) {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        
+        if (isPlayerDetected() == true && !AttackMode && distanceToPlayer<8) {
             AttackMode = true;
             GetComponent<SetAlienDestination>().AttackMode = true;
             eyeRenderer.material = RedEyeMaterial;
